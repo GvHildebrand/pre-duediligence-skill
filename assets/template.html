@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+  preDD report template. Copy this file, fill each section, drop TERRA figures
+  (fig_score.png / fig_satellite.png / fig_layers.png) next to it, then render:
+      bash scripts/build_pdf.sh <this-file>.html <output>.pdf
+  Confidence chips:  <span class="tag t-conf">CONFIRMED</span>  t-lik LIKELY
+      t-unk VERIFY   t-est DERIVED   t-flag FLAG
+  Callouts: .callout (green) .warn (amber) .stop (red)
+  Section break: add class="pb" to an <h2> to start it on a new page.
+  Palette is Dear Wise Earth green; swap the hex values to rebrand.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>[ASSET] — Preliminary Due-Diligence Report</title>
+<style>
+  @page { size: A4; margin: 17mm 15mm 18mm 15mm; }
+  @page :first { margin: 0; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; font-size:9.4pt; line-height:1.5; color:#1b1e1b; margin:0; }
+  h1,h2,h3,h4,.san { font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; }
+  h2 { font-size:13pt; color:#14361f; margin:24px 0 8px; padding-bottom:4px; border-bottom:1.6px solid #14361f; letter-spacing:-0.2px; }
+  h2 .n { color:#8a9a86; font-weight:400; margin-right:8px; }
+  h3 { font-size:10.4pt; color:#2c5f3c; margin:15px 0 5px; }
+  h4 { font-size:8.6pt; color:#3a3f3a; text-transform:uppercase; letter-spacing:0.7px; margin:11px 0 3px; }
+  p { margin:0 0 7px; }
+  ul,ol { margin:4px 0 8px; padding-left:16px; } li { margin-bottom:3px; }
+  a { color:#2c5f3c; text-decoration:none; }
+  table { width:100%; border-collapse:collapse; margin:8px 0 12px; font-size:8.3pt; }
+  th { background:#eef2ec; text-align:left; padding:4px 6px; border-bottom:1.2px solid #14361f; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:7.6pt; text-transform:uppercase; letter-spacing:0.4px; color:#14361f; vertical-align:bottom; }
+  td { padding:4px 6px; border-bottom:0.5px solid #dadfd7; vertical-align:top; }
+  tr:nth-child(even) td { background:#fafbf9; }
+  .num { text-align:right; white-space:nowrap; }
+  .san { font-size:8pt; }
+  .tag { display:inline-block; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:6.6pt; font-weight:700; letter-spacing:0.6px; padding:1px 5px; border-radius:2px; vertical-align:1.5px; white-space:nowrap; }
+  .t-conf{background:#dfeade;color:#1e5130;} .t-lik{background:#e6ecf5;color:#27446f;}
+  .t-unk{background:#f6e9d8;color:#8a5514;} .t-est{background:#efe6f2;color:#5c3168;}
+  .t-flag{background:#fbe3e0;color:#8f2c22;}
+  .callout{background:#f2f6f0;border-left:3px solid #2c5f3c;padding:9px 12px;margin:10px 0;}
+  .warn{background:#fdf4ec;border-left:3px solid #b5651d;padding:9px 12px;margin:10px 0;}
+  .stop{background:#fbf0f0;border-left:3px solid #9c2b2b;padding:9px 12px;margin:10px 0;}
+  .pb{page-break-before:always;} .avoid{page-break-inside:avoid;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+  .grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;}
+  .stat{border:1px solid #d5dad2;padding:7px 9px;margin-bottom:8px;}
+  .stat .big{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15pt;color:#14361f;font-weight:600;display:block;line-height:1.05;}
+  .stat .lab{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:7pt;text-transform:uppercase;letter-spacing:0.6px;color:#6d7a6d;}
+  .srcs{font-size:7.2pt;color:#6d7a6d;line-height:1.55;}
+  figure{margin:10px 0;} figcaption{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:7.4pt;color:#6d7a6d;margin-top:3px;}
+  img.fig{width:100%;border:1px solid #cfd4cc;}
+  .lead{font-size:10.5pt;line-height:1.45;color:#26291f;}
+  hr{border:none;border-top:0.5px solid #d8ddd6;margin:12px 0;}
+  .toc td{border-bottom:0.5px dotted #c8cfc6;padding:3px 4px;} .toc tr:nth-child(even) td{background:none;}
+  .cover{height:297mm;box-sizing:border-box;padding:34mm 24mm 20mm;background:#14361f;color:#eef3ea;position:relative;}
+  .cover .terra{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;letter-spacing:5px;font-size:10pt;color:#9fc0a6;}
+  .cover h1{font-family:"Iowan Old Style",Georgia,serif;font-size:38pt;line-height:1.02;margin:16px 0 4px;font-weight:600;letter-spacing:-0.8px;}
+  .cover .sub{font-size:13.5pt;color:#c7d7c2;font-style:italic;margin-top:10px;line-height:1.35;}
+  .cover .band{position:absolute;left:24mm;right:24mm;bottom:22mm;}
+  .cover .dc{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:8.2pt;color:#a9c1a5;line-height:1.85;border-top:1px solid #3a5c42;padding-top:12px;}
+  .scorebadge{display:inline-block;border:1.5px solid #9fc0a6;padding:10px 16px;margin-top:26px;}
+  .scorebadge .s{font-family:"Iowan Old Style",Georgia,serif;font-size:30pt;line-height:1;color:#fff;}
+  .scorebadge .l{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:7.5pt;letter-spacing:1.5px;color:#9fc0a6;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+  <div class="terra">DEAR WISE EARTH · TERRA LAND INTELLIGENCE</div>
+  <h1>[ASSET NAME]</h1>
+  <div class="sub">Preliminary (pre-acquisition) due-diligence report<br>[one-line asset descriptor · location]</div>
+  <!-- Include the score badge only if a TERRA reading was run: -->
+  <div class="scorebadge">
+    <span class="s">[NN]<span style="font-size:15pt;color:#9fc0a6">/100</span></span>
+    <span class="l">&nbsp;&nbsp;TERRA LAND SCORE · MODEL FIT: [RESTORE]</span>
+  </div>
+  <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:8.4pt;color:#c7d7c2;margin-top:14px;line-height:1.7;">
+    Conservation priority [NN]/100 · Hospitality fit [NN]/100 · reading of record: <span style="color:#eef3ea">read.dearwise.earth/d/[id]</span>
+  </div>
+  <div class="band"><div class="dc">
+    PREPARED FOR &nbsp;[name] &nbsp;·&nbsp; [entity]<br>
+    PURPOSE &nbsp;[buy-side preparation ahead of …]<br>
+    DATE &nbsp;[date] &nbsp;·&nbsp; STATUS &nbsp;Preliminary — desktop &amp; remote-sensing only; confirmatory DD not yet performed<br>
+    CLASSIFICATION &nbsp;Confidential — not for distribution to the seller or third parties
+  </div></div>
+</div>
+
+<!-- ══ DOCUMENT CONTROL ══ -->
+<h2><span class="n">—</span>Document control &amp; how to read this</h2>
+<p>[One paragraph: what a pre-DD report is and is not; that it is deliberately conservative.]</p>
+<p class="san conf-key">
+<span class="tag t-conf">CONFIRMED</span> primary / first-party &nbsp;
+<span class="tag t-lik">LIKELY</span> credible secondary &nbsp;
+<span class="tag t-unk">VERIFY</span> DD item &nbsp;
+<span class="tag t-est">DERIVED</span> our calculation &nbsp;
+<span class="tag t-flag">FLAG</span> discrepancy to resolve</p>
+<!-- Contents table (class="toc") here -->
+<div class="warn san"><strong>Findings that change the diligence plan immediately</strong> — [surface the 1–3 TERRA/title flags on page 1].</div>
+
+<!-- ══ SECTIONS 1–16 ══  Fill per references/report-structure.md.
+     Skeleton: -->
+<h2 class="pb"><span class="n">1</span>Executive summary</h2>
+<p class="lead">[thesis]</p>
+<div class="grid4">
+  <div class="stat"><span class="big">[NN/100]</span><span class="lab">TERRA land score</span></div>
+  <div class="stat"><span class="big">[area]</span><span class="lab">[note]</span></div>
+  <div class="stat"><span class="big">[keys]</span><span class="lab">[note]</span></div>
+  <div class="stat"><span class="big">[$range]</span><span class="lab">Preliminary value</span></div>
+</div>
+<h4>What we can stand behind</h4><ul><li>…</li></ul>
+<h4>What must be resolved before a number is committed</h4><ul><li>…</li></ul>
+<div class="callout"><strong>Recommendation.</strong> …</div>
+
+<h2 class="pb"><span class="n">2</span>Asset identification &amp; title screen</h2>
+<h2><span class="n">3</span>TERRA land-intelligence reading</h2>
+<figure class="avoid"><img class="fig" src="fig_score.png"><figcaption>…</figcaption></figure>
+<figure class="avoid"><img class="fig" src="fig_satellite.png"><figcaption>…</figcaption></figure>
+<figure class="avoid"><img class="fig" src="fig_layers.png"><figcaption>…</figcaption></figure>
+<h2 class="pb"><span class="n">4</span>Physical asset inventory</h2>
+<h2 class="pb"><span class="n">5</span>Commercial &amp; operating snapshot</h2>
+<h2><span class="n">6</span>Market context &amp; demand</h2>
+<h2 class="pb"><span class="n">7</span>Industry benchmarks</h2>
+<h2><span class="n">8</span>Transaction structure &amp; tax</h2>
+<h2 class="pb"><span class="n">9</span>Preliminary valuation</h2>
+<h2><span class="n">10</span>Legal &amp; regulatory red-flag screen</h2>
+<h2 class="pb"><span class="n">11</span>Consolidated risk matrix</h2>
+<h2><span class="n">12</span>Confirmatory due-diligence workplan</h2>
+<h2 class="pb"><span class="n">13</span>Information (data-room) request list</h2>
+<h2><span class="n">14</span>Indicative process &amp; timeline</h2>
+<h2><span class="n">15</span>Questions for the owner</h2>
+<h2 class="pb"><span class="n">16</span>Sources, method &amp; disclaimer</h2>
+<div class="stop san"><strong>Standing &amp; disclaimer.</strong> Not a valuation, appraisal, audit, or legal/tax/investment advice; items tagged VERIFY or FLAG are unresolved by design; confirm with local counsel with registry access before relying on any figure.</div>
+
+</body>
+</html>
