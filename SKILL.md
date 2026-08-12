@@ -40,7 +40,8 @@ scope of work.
 This skill was distilled from a real engagement: a preliminary due-diligence
 report on a large off-grid eco-lodge and farm acquisition. Read
 `references/report-structure.md` for the full section-by-section template; it is
-the spine of the deliverable.
+the spine of the deliverable. `references/terra-workflow.md` documents the TERRA
+API used in step 3, and `scripts/terra_read.py` calls it.
 
 ## The one rule that makes these reports trustworthy: confidence tags
 
@@ -98,25 +99,40 @@ Agents routinely hit web-search caps — that's fine; capture what they found an
 tag the gaps **VERIFY**. Absence of evidence (e.g. no public listing) is itself a
 finding worth stating, not a failure.
 
-### 3 — Run the TERRA land reading (when a browser is available)
+### 3 — Run the TERRA land reading (call the API directly)
 
 This is the one first-party dataset in the report and Dear Wise Earth's
-differentiator. Follow `references/terra-workflow.md` step by step. In short:
-drive `read.dearwise.earth/engine`, search the centroid coordinates, click
-**READ THIS PARCEL**, wait for it to compute, then capture the full reading text,
-save screenshots of the score/radar and the analytical-layer panels, and grab the
-shareable `/d/…` URL. Feed the score, the four/five sub-readings, the physical
-metrics, the conservation-priority and hospitality-fit scores, the percentile
-ranking, and especially any **FLAG** (jurisdiction mismatches, forest-history vs.
-narrative, watercourse-name mismatches) into §3 of the report.
+differentiator. **The fastest, most reliable way is a direct HTTP call — no
+browser, no login, works headless:**
 
-If no browser is connected, say so, embed the parcel centroid and any prior public
-TERRA reading for calibration, and list "run a boundary-exact TERRA reading" as a
-Tier-1 DD action. Never fabricate a reading.
+    python3 scripts/terra_read.py --lat <LAT> --lon <LON>
 
-**Scope honesty:** TERRA's default read is a 1 km² (100 ha) box at the centroid,
-not the exact titled boundary. State this, and make a boundary-exact re-read a
-DD item.
+That POSTs the parcel to `read.dearwise.earth/api/dossier` (open, no auth),
+writes the full ~22 KB reading JSON to `terra_reading.json`, and prints a summary
+with the score, model fit, pillar scores, and the `/d/<id>` reading-of-record URL.
+Every reading generated this way is public and joins the TERRA wall — that is
+intended. Pass `--geojson parcel.geojson` instead of a centroid to read an exact
+titled boundary. Full API contract and response shape: `references/terra-workflow.md`.
+
+From the JSON, feed §3 of the report: the composite land score and model fit,
+the pillar scores (water/soil/ecology/climate_resilience/pressure), the physical
+metrics (`terrain`, `cover`, `water`, `climate`, `forest_loss`), the `deployment`
+and `project_model` (conservation-priority and hospitality-fit), the `comparison`
+percentiles, the `cadastre` jurisdiction, and especially any **FLAG** —
+jurisdiction mismatch (`cadastre` vs the display header), forest-history vs. the
+seller's narrative (`forest_loss`/`deforestation`), or watercourse-name mismatch.
+
+For the report figures, fetch imagery via `GET /api/imagery/render` (see the
+reference), or fall back to the browser only for screenshots.
+
+**Browser fallback:** if the API call is blocked by the local network, drive
+`read.dearwise.earth/engine` manually — the step-by-step is in the reference.
+Never fabricate a reading.
+
+**Scope honesty:** the default read is a 1 km² (100 ha) box at the centroid, not
+the exact titled boundary. State this, and make a boundary-exact re-read a DD item.
+Readings are freshly synthesised each call, so the headline wording and minor
+scores can shift run-to-run — always cite the specific `/d/<id>` you used.
 
 ### 4 — Assemble the report
 
@@ -156,8 +172,9 @@ caption; don't re-describe the document. If the user wanted a different format
 
 - `references/report-structure.md` — the 16-section template, in detail. Read
   this before writing the report.
-- `references/terra-workflow.md` — how to drive the TERRA engine and what to
-  extract. Read this before step 3.
+- `references/terra-workflow.md` — the TERRA API contract (endpoints, body,
+  response shape) and the browser fallback. Read this before step 3.
+- `scripts/terra_read.py` — calls the TERRA API and prints/saves the reading.
 - `references/research-plan.md` — the five research workstreams with copy-ready
   agent prompts. Read this before step 2.
 - `references/benchmark-library.md` — a dated CR/LatAm benchmark starter set to

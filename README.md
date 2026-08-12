@@ -44,9 +44,11 @@ and flags like that are often the most valuable output in the report.
 1. **Scope** the assignment briefly (asset, coordinates, purpose, legal depth).
 2. **Research first**, in five parallel workstreams: sale status, physical asset,
    operating history and reputation, market and comparables, and risk/legal.
-3. **Run the TERRA reading** on the parcel via a connected browser — search the
-   centroid coordinates, read the parcel, and capture the score, figures, and the
-   shareable reading-of-record URL.
+3. **Run the TERRA reading** on the parcel with a direct API call — no browser,
+   no login: `python3 scripts/terra_read.py --lat <LAT> --lon <LON>` POSTs to the
+   open `read.dearwise.earth/api/dossier` endpoint, saves the full reading JSON,
+   and returns the shareable reading-of-record URL. (A browser fallback is
+   documented for environments where the API is unreachable.)
 4. **Assemble** the 16-section report from the bundled HTML template.
 5. **Render** the PDF (headless Chromium) and deliver it.
 
@@ -64,12 +66,13 @@ and flags like that are often the most valuable output in the report.
 SKILL.md                     # the method (read first)
 references/
   report-structure.md        # the 16-section template
-  terra-workflow.md          # how to drive the TERRA engine
+  terra-workflow.md          # the TERRA API contract + browser fallback
   research-plan.md           # the five research workstreams
   benchmark-library.md       # a dated CR/LatAm benchmark starter set
 assets/
   template.html              # the styled HTML/PDF scaffold
 scripts/
+  terra_read.py              # calls the TERRA API → reading JSON (no browser)
   build_pdf.sh               # headless-Chromium HTML → PDF renderer
 pre-dd.skill                 # packaged, installable skill archive
 ```
