@@ -12,7 +12,7 @@ data and build §3 around it.
 The engine is a thin client over an **open JSON API — no authentication, no
 browser required.** Generate a reading in one call:
 
-    python3 scripts/terra_read.py --lat 9.7489 --lon -83.7534
+    python3 scripts/terra_read.py --lat 10.4630 --lon -84.7030
     python3 scripts/terra_read.py --geojson parcel.geojson   # exact boundary
 
 Under the hood:

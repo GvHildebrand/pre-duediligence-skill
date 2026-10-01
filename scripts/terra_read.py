@@ -15,7 +15,7 @@ joins the wall (this is intended). Pass a centroid and this builds the standard
 read an exact boundary.
 
 Usage:
-    python3 terra_read.py --lat 9.7489 --lon -83.7534
+    python3 terra_read.py --lat 10.4630 --lon -84.7030
     python3 terra_read.py --lat 9.75 --lon -83.75 --half-km 0.5 --out reading.json
     python3 terra_read.py --geojson parcel.geojson        # exact boundary
 
